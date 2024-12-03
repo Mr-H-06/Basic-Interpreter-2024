@@ -45,12 +45,11 @@ PrintStatement::~PrintStatement() {
 }
 void PrintStatement::execute(EvalState &state, Program &program) {
     try{
-        int k = parse->eval(state);
-        std::cout << k << '\n';
+        std::cout << parse->eval(state) << std::endl;
         delete this;
     } catch (ErrorException& error) {
         delete this;
-        std::cout << error.getMessage() << '\n';
+        std::cout << error.getMessage() << std::endl;
     }
 }
 
@@ -79,7 +78,7 @@ void InputStatement::execute(EvalState &state, Program &program) {
                 state.setValue(name, n);
                 break;
             } catch (ErrorException& error) {
-                std::cout << "INVALID NUMBER\n";
+                std::cout << "INVALID NUMBER" << std::endl;
                 //std::cout << error.getMessage() << std::endl;
             }
         }
@@ -109,7 +108,7 @@ void LetStatement::execute(EvalState &state, Program &program) {
         } catch (ErrorException& error) {
             delete this;
             delete k;
-            std::cout << error.getMessage() << '\n';
+            std::cout << error.getMessage() << std::endl;
         }
     }
 }
@@ -204,14 +203,8 @@ int IfStatement::ifexecute(EvalState &state, Program &program) {
     expr1.scanNumbers();
     expr1.setInput(expression);
     k = parseExp(expr1);
-    try {
-        ans1 = k->eval(state);
-        delete k;
-    } catch (ErrorException& error) {
-        delete k;
-        delete this;
-        std::cout << error.getMessage() << '\n';
-    }
+    ans1 = k->eval(state);
+    delete k;
     expression = scan.nextToken();
     read = scan.nextToken();
     while (read != "THEN") {
@@ -222,14 +215,7 @@ int IfStatement::ifexecute(EvalState &state, Program &program) {
     expr2.scanNumbers();
     expr2.setInput(expression);
     k = parseExp(expr2);
-    try {
-        ans2 = k->eval(state);
-        delete k;
-    } catch (ErrorException& error) {
-        delete k;
-        delete this;
-        std::cout << error.getMessage() << '\n';
-    }
+    ans2 = k->eval(state);
     read = scan.nextToken();
     GoTo = stringToInteger(read);
     delete k;
@@ -248,7 +234,7 @@ void ListStatement::execute(EvalState &state, Program &program) {
     delete this;
     int i = program.getFirstLineNumber();
     while (i != -1) {
-        std::cout << program.getline(i) << '\n';
+        std::cout << program.getline(i) << std::endl;
         i = program.getNextLineNumber(i);
     }
 }
