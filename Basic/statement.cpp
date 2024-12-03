@@ -74,7 +74,7 @@ void InputStatement::execute(EvalState &state, Program &program) {
         while (true) {
             try {
                 std::cout << " ? ";
-                std::cin >> read;
+                getline(std::cin, read);
                 n = stringToInteger(read);
                 state.setValue(name, n);
                 return;
