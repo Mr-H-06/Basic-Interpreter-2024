@@ -76,9 +76,7 @@ public:
     void Clear();
 
 private:
-
     std::map<std::string, int> symbolTable;
-
 };
 
 #endif

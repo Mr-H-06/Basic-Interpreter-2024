@@ -22,8 +22,11 @@ void processLine(std::string line, Program &program, EvalState &state);
 /* Main program */
 
 int main() {
-    EvalState state;
-    Program program;
+    //freopen("D:\\c++code\\code\\bigger.in","r",stdin);
+    //freopen("D:\\c++code\\code\\out.out","w",stdout);
+    //freopen("/mnt/c/Users/hejia/Desktop/Basic-Interpreter-2024-main/Test/trace65.txt","r",stdin);
+    EvalState state;   // 存变量 和 值
+    Program program;   // 存代码
     //cout << "Stub implementation of BASIC" << endl;
     while (true) {
         try {
@@ -56,7 +59,69 @@ void processLine(std::string line, Program &program, EvalState &state) {
     scanner.ignoreWhitespace();
     scanner.scanNumbers();
     scanner.setInput(line);
-
     //todo
+    std::string read = scanner.nextToken();
+    if ('0' <= read[0] && read[0] <= '9') {
+        int linenumber = stringToInteger(read);
+        program.addSourceLine(linenumber, line);
+        if (scanner.hasMoreTokens()) {
+            read = scanner.nextToken();
+            if (read == "INPUT") {
+            } else if (read == "LET") {
+            } else if (read == "PRINT") {
+            } else if (read == "END") {
+            } else if (read == "GOTO") {
+            } else if (read == "REM") {
+            } else if (read == "IF") {
+            } else {
+                error("SYNTAX ERROR");
+            }
+        } else {
+            program.removeSourceLine(linenumber);
+        }
+    } else {
+        Statement *output;
+        if (read == "RUN") {
+            int ins = program.getFirstLineNumber();
+            while (ins != -1) {
+                TokenScanner code;
+                code.ignoreWhitespace();
+                code.scanNumbers();
+                code.setInput(program.getline(ins));
+            }
+        } else if (read == "LIST") {   //
+            output = new ListStatement;
+            output->execute(state, program);
+            delete output;
+        } else if (read == "CLEAR") {   //
+            program.clear();
+            state.Clear();
+        } else if (read == "QUIT") {   //
+            exit(0);
+        } else if (read == "HELP") {   //
+            std::cout << "There is nothing actually.\n";
+        } else if (read == "INPUT") {
+            output = new InputStatement(line);
+            output->execute(state,program);
+            delete output;
+        } else if (read == "LET") {   //
+            output = new LetStatement(line);
+            output->execute(state, program);
+            delete output;/*
+            std::string name = scanner.nextToken();
+            if (scanner.nextToken() != "=") {
+                error("SYNTAX ERROR");
+            }
+            state.setValue(name, parseExp(scanner)->eval(state));
+            */
+        } else if (read == "PRINT") {   //
+            output = new PrintStatement(parseExp(scanner));
+            output->execute(state, program);
+            delete output;
+            //Expression *parse = parseExp(scanner);
+            //std::cout << parse->eval(state) << std::endl;
+        } else {
+            error("SYNTAX ERROR");
+        }
+    }
 }
-

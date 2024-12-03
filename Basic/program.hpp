@@ -142,11 +142,16 @@ public:
 
     //more func to add
     //todo
+  std::string getline(int lineNumber);
+
+  bool checkline(int lineNumber);
 
 private:
 
     // Fill this in with whatever types and instance variables you need
     //todo
+    std::set<int> number;
+    std::unordered_map<int, std::string> linecode;
 };
 
 #endif

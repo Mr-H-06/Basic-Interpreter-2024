@@ -71,6 +71,10 @@ public:
 
     virtual void execute(EvalState &state, Program &program) = 0;
 
+    bool check(std::string);
+
+private:
+    const std::string illegal[13] ={"REM", "LET", "PRINT", "INPUT", "END", "GOTO", "IF", "THEN", "RUN", "LIST", "CLEAR", "QUIT", "HELP"};
 };
 
 
@@ -84,5 +88,57 @@ public:
  * an Expression object), the class implementation must also
  * specify its own destructor method to free that memory.
  */
+
+class PrintStatement : public Statement{
+public:
+    PrintStatement(Expression *);
+    ~PrintStatement();
+    void execute(EvalState &, Program &) override;
+private:
+    Expression *parse;
+};
+
+class InputStatement : public Statement{
+public:
+    InputStatement(std::string);
+    ~InputStatement();
+    void execute(EvalState &, Program &) override;
+private:
+    std::string input;
+};
+
+class LetStatement : public Statement {
+public:
+    LetStatement(std::string);
+    ~LetStatement();
+    void execute(EvalState &, Program &) override;
+private:
+    std::string input;
+};
+
+class RunStatement : public Statement{
+public:
+    RunStatement();
+    ~RunStatement();
+    void execute(EvalState &, Program &) override;
+};
+
+class IfStatement : public Statement{
+public:
+    IfStatement(std::string);
+    ~IfStatement();
+    void execute(EvalState &state, Program &program) override;
+    int executeif(EvalState &, Program &);
+private:
+    std::string input;
+};
+
+class ListStatement : public Statement{
+public:
+    ListStatement();
+    ~ListStatement();
+    void execute(EvalState &, Program &) override;
+};
+
 
 #endif
