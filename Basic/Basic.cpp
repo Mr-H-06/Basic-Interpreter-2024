@@ -74,7 +74,7 @@ void processLine(std::string line, Program &program, EvalState &state) {
             } else if (read == "REM") {
             } else if (read == "IF") {
             } else {
-                error("SYNTAX ERROR");
+                std::cout << "SYNTAX ERROR\n";
             }
         } else {
             program.removeSourceLine(linenumber);
@@ -121,7 +121,7 @@ void processLine(std::string line, Program &program, EvalState &state) {
             //Expression *parse = parseExp(scanner);
             //std::cout << parse->eval(state) << std::endl;
         } else {
-            error("SYNTAX ERROR");
+            std::cout << "SYNTAX ERROR\n";
         }
     }
 }

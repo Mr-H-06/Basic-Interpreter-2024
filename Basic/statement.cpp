@@ -59,7 +59,7 @@ void InputStatement::execute(EvalState &state, Program &program) {
     scan.nextToken();
     std::string name = scan.nextToken();
     if (scan.hasMoreTokens() || !check(name)) {
-        error("SYNTAX ERROR");
+        std::cout << "SYNTAX ERROR\n";
     } else {
         std::string read;
         int n;
