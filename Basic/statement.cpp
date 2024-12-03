@@ -45,11 +45,11 @@ PrintStatement::~PrintStatement() {
 }
 void PrintStatement::execute(EvalState &state, Program &program) {
     try{
-        std::cout << parse->eval(state) << std::endl;
+        std::cout << parse->eval(state) << '\n';
         delete this;
     } catch (ErrorException& error) {
         delete this;
-        std::cout << error.getMessage() << std::endl;
+        std::cout << error.getMessage() << '\n';
     }
 }
 
@@ -136,7 +136,6 @@ void RunStatement::execute(EvalState &state, Program &program) {
                 error("LINE NUMBER ERROR");
             }
         } else if (read == "IF") {
-            delete output;
             IfStatement *output;
             output = new IfStatement(line);
             int t = output->ifexecute(state, program);
@@ -181,6 +180,7 @@ void IfStatement::execute(EvalState &state, Program &program) {}
 int IfStatement::ifexecute(EvalState &state, Program &program) {
     TokenScanner scan, expr1, expr2;
     std::string expression, read, sign;
+    Expression *k;
     int ans1, ans2, GoTo;
     scan.ignoreWhitespace();
     scan.scanNumbers();
@@ -196,7 +196,9 @@ int IfStatement::ifexecute(EvalState &state, Program &program) {
     expr1.ignoreWhitespace();
     expr1.scanNumbers();
     expr1.setInput(expression);
-    ans1 = parseExp(expr1)->eval(state);
+    k = parseExp(expr1);
+    ans1 = k->eval(state);
+    delete k;
     expression = scan.nextToken();
     read = scan.nextToken();
     while (read != "THEN") {
@@ -206,9 +208,11 @@ int IfStatement::ifexecute(EvalState &state, Program &program) {
     expr2.ignoreWhitespace();
     expr2.scanNumbers();
     expr2.setInput(expression);
-    ans2 = parseExp(expr2)->eval(state);
+    k = parseExp(expr2);
+    ans2 = k->eval(state);
     read = scan.nextToken();
     GoTo = stringToInteger(read);
+    delete k;
     delete this;
     if (sign == ">" && ans1 > ans2 || sign == "=" && ans1 == ans2 || sign == "<" && ans1 < ans2) {
         return GoTo;
