@@ -45,7 +45,8 @@ PrintStatement::~PrintStatement() {
 }
 void PrintStatement::execute(EvalState &state, Program &program) {
     try{
-        std::cout << parse->eval(state) << '\n';
+        int k = parse->eval(state);
+        std::cout << k << '\n';
         delete this;
     } catch (ErrorException& error) {
         delete this;
@@ -101,9 +102,15 @@ void LetStatement::execute(EvalState &state, Program &program) {
         error("SYNTAX ERROR");
     } else {
         Expression *k = parseExp(scan);
-        state.setValue(name, k->eval(state));
-        delete this;
-        delete k;
+        try {
+            state.setValue(name, k->eval(state));
+            delete this;
+            delete k;
+        } catch (ErrorException& error) {
+            delete this;
+            delete k;
+            std::cout << error.getMessage() << '\n';
+        }
     }
 }
 
@@ -197,8 +204,14 @@ int IfStatement::ifexecute(EvalState &state, Program &program) {
     expr1.scanNumbers();
     expr1.setInput(expression);
     k = parseExp(expr1);
-    ans1 = k->eval(state);
-    delete k;
+    try {
+        ans1 = k->eval(state);
+        delete k;
+    } catch (ErrorException& error) {
+        delete k;
+        delete this;
+        std::cout << error.getMessage() << '\n';
+    }
     expression = scan.nextToken();
     read = scan.nextToken();
     while (read != "THEN") {
@@ -209,7 +222,14 @@ int IfStatement::ifexecute(EvalState &state, Program &program) {
     expr2.scanNumbers();
     expr2.setInput(expression);
     k = parseExp(expr2);
-    ans2 = k->eval(state);
+    try {
+        ans2 = k->eval(state);
+        delete k;
+    } catch (ErrorException& error) {
+        delete k;
+        delete this;
+        std::cout << error.getMessage() << '\n';
+    }
     read = scan.nextToken();
     GoTo = stringToInteger(read);
     delete k;
