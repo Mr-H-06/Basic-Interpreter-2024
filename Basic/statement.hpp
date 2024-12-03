@@ -127,8 +127,8 @@ class IfStatement : public Statement{
 public:
     IfStatement(std::string);
     ~IfStatement();
-    void execute(EvalState &state, Program &program) override;
-    int executeif(EvalState &, Program &);
+    void execute(EvalState &, Program &) override;
+    int ifexecute(EvalState &, Program &);
 private:
     std::string input;
 };

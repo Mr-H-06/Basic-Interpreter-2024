@@ -99,8 +99,10 @@ void LetStatement::execute(EvalState &state, Program &program) {
         delete this;
         error("SYNTAX ERROR");
     } else {
-        state.setValue(name, parseExp(scan)->eval(state));
+        Expression *k = parseExp(scan);
+        state.setValue(name, k->eval(state));
         delete this;
+        delete k;
     }
 }
 
@@ -133,18 +135,19 @@ void RunStatement::execute(EvalState &state, Program &program) {
                 error(" LINE NUMBER ERROR");
             }
         } else if (read == "IF") {
-            output = new IfStatement(line);
-            output->execute(state, program);
             delete output;
+            IfStatement *output;
+            output = new IfStatement(line);
+            int t = output->ifexecute(state, program);
+            if (t != -1) ins = t;
+            else ins = program.getNextLineNumber(ins);
         } else if (read == "INPUT") {
             output = new InputStatement(line);
             output->execute(state,program);
-            delete output;
             ins = program.getNextLineNumber(ins);
         } else if (read == "LET") {   //
             output = new LetStatement(line);
             output->execute(state, program);
-            delete output;
             ins = program.getNextLineNumber(ins);/*
             std::string name = scanner.nextToken();
             if (scanner.nextToken() != "=") {
@@ -155,7 +158,6 @@ void RunStatement::execute(EvalState &state, Program &program) {
         } else if (read == "PRINT") {   //
             output = new PrintStatement(parseExp(code));
             output->execute(state, program);
-            delete output;
             ins = program.getNextLineNumber(ins);
             //Expression *parse = parseExp(scanner);
             //std::cout << parse->eval(state) << std::endl;
@@ -175,8 +177,7 @@ void RunStatement::execute(EvalState &state, Program &program) {
 IfStatement::IfStatement(std::string input) : input(input){}
 IfStatement::~IfStatement() {}
 void IfStatement::execute(EvalState &state, Program &program) {}
-int IfStatement::executeif(EvalState &state, Program &program) {
-    delete this;
+int IfStatement::ifexecute(EvalState &state, Program &program) {
     TokenScanner scan, expr1, expr2;
     std::string expression, read, sign;
     int ans1, ans2, GoTo;
@@ -185,6 +186,7 @@ int IfStatement::executeif(EvalState &state, Program &program) {
     scan.setInput(input);
     expression = scan.nextToken();
     read = scan.nextToken();
+    expression = "";
     while (read != ">" && read != "<" && read != "=") {
         expression = expression + read;
         read = scan.nextToken();
@@ -196,7 +198,6 @@ int IfStatement::executeif(EvalState &state, Program &program) {
     ans1 = parseExp(expr1)->eval(state);
     expression = scan.nextToken();
     read = scan.nextToken();
-    GoTo = stringToInteger(read);
     while (read != "THEN") {
         expression = expression + read;
         read = scan.nextToken();
@@ -205,7 +206,10 @@ int IfStatement::executeif(EvalState &state, Program &program) {
     expr2.scanNumbers();
     expr2.setInput(expression);
     ans2 = parseExp(expr2)->eval(state);
-    if (read == ">" && ans1 > ans2 || read == "=" && ans1 == ans2 || read == "<" && ans1 < ans2) {
+    read = scan.nextToken();
+    GoTo = stringToInteger(read);
+    delete this;
+    if (sign == ">" && ans1 > ans2 || sign == "=" && ans1 == ans2 || sign == "<" && ans1 < ans2) {
         return GoTo;
     } else return -1;
 }
