@@ -73,10 +73,11 @@ void InputStatement::execute(EvalState &state, Program &program) {
         delete this;
         while (true) {
             try {
+                std::cout << " ? ";
                 std::cin >> read;
                 n = stringToInteger(read);
                 state.setValue(name, n);
-                break;
+                return;
             } catch (ErrorException& error) {
                 std::cout << "INVALID NUMBER" << std::endl;
                 //std::cout << error.getMessage() << std::endl;
