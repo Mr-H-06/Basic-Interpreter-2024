@@ -58,7 +58,6 @@ void PrintStatement::execute(EvalState &state, Program &program) {
 InputStatement::InputStatement(std::string input) : input(input){}
 InputStatement::~InputStatement() {}
 void InputStatement::execute(EvalState &state, Program &program) {
-    delete this;
     TokenScanner scan;
     scan.ignoreWhitespace();
     scan.scanNumbers();
@@ -66,10 +65,12 @@ void InputStatement::execute(EvalState &state, Program &program) {
     scan.nextToken();
     std::string name = scan.nextToken();
     if (scan.hasMoreTokens() || !check(name)) {
+        delete this;
         error("SYNTAX ERROR");
     } else {
         std::string read;
         int n;
+        delete this;
         while (true) {
             try {
                 std::cin >> read;
@@ -132,7 +133,7 @@ void RunStatement::execute(EvalState &state, Program &program) {
             if (program.checkline(lineNumber)) {
                 ins = lineNumber;
             } else {
-                error(" LINE NUMBER ERROR");
+                error("LINE NUMBER ERROR");
             }
         } else if (read == "IF") {
             delete output;
