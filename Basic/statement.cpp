@@ -89,7 +89,6 @@ void InputStatement::execute(EvalState &state, Program &program) {
 LetStatement::LetStatement(std::string input) : input(input) {}
 LetStatement::~LetStatement() {}
 void LetStatement::execute(EvalState &state, Program &program) {
-    delete this;
     TokenScanner scan;
     scan.ignoreWhitespace();
     scan.scanNumbers();
@@ -101,6 +100,7 @@ void LetStatement::execute(EvalState &state, Program &program) {
         error("SYNTAX ERROR");
     } else {
         state.setValue(name, parseExp(scan)->eval(state));
+        delete this;
     }
 }
 
