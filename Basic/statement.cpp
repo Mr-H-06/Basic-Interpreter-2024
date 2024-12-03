@@ -44,7 +44,13 @@ PrintStatement::~PrintStatement() {
     delete parse;
 }
 void PrintStatement::execute(EvalState &state, Program &program) {
-    std::cout << parse->eval(state) << std::endl;
+    try{
+        std::cout << parse->eval(state) << std::endl;
+        delete this;
+    } catch (ErrorException& error) {
+        delete this;
+        std::cout << error.getMessage() << std::endl;
+    }
 }
 
 
@@ -52,6 +58,7 @@ void PrintStatement::execute(EvalState &state, Program &program) {
 InputStatement::InputStatement(std::string input) : input(input){}
 InputStatement::~InputStatement() {}
 void InputStatement::execute(EvalState &state, Program &program) {
+    delete this;
     TokenScanner scan;
     scan.ignoreWhitespace();
     scan.scanNumbers();
@@ -67,12 +74,13 @@ void InputStatement::execute(EvalState &state, Program &program) {
             try {
                 std::cin >> read;
                 n = stringToInteger(read);
+                state.setValue(name, n);
                 break;
             } catch (ErrorException& error) {
                 std::cout << "INVALID NUMBER\n";
+                //std::cout << error.getMessage() << std::endl;
             }
         }
-        state.setValue(name, n);
     }
 }
 
@@ -81,6 +89,7 @@ void InputStatement::execute(EvalState &state, Program &program) {
 LetStatement::LetStatement(std::string input) : input(input) {}
 LetStatement::~LetStatement() {}
 void LetStatement::execute(EvalState &state, Program &program) {
+    delete this;
     TokenScanner scan;
     scan.ignoreWhitespace();
     scan.scanNumbers();
@@ -100,6 +109,7 @@ void LetStatement::execute(EvalState &state, Program &program) {
 RunStatement::RunStatement() {}
 RunStatement::~RunStatement() {};
 void RunStatement::execute(EvalState &state, Program &program) {
+    delete this;
     int ins = program.getFirstLineNumber();
     while (ins != -1) {
         std::string read = program.getline(ins), line;
@@ -166,6 +176,7 @@ IfStatement::IfStatement(std::string input) : input(input){}
 IfStatement::~IfStatement() {}
 void IfStatement::execute(EvalState &state, Program &program) {}
 int IfStatement::executeif(EvalState &state, Program &program) {
+    delete this;
     TokenScanner scan, expr1, expr2;
     std::string expression, read, sign;
     int ans1, ans2, GoTo;
@@ -205,6 +216,7 @@ int IfStatement::executeif(EvalState &state, Program &program) {
 ListStatement::ListStatement() {}
 ListStatement::~ListStatement() {}
 void ListStatement::execute(EvalState &state, Program &program) {
+    delete this;
     int i = program.getFirstLineNumber();
     while (i != -1) {
         std::cout << program.getline(i) << '\n';

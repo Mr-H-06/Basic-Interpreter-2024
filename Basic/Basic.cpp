@@ -24,7 +24,7 @@ void processLine(std::string line, Program &program, EvalState &state);
 int main() {
     //freopen("D:\\c++code\\code\\bigger.in","r",stdin);
     //freopen("D:\\c++code\\code\\out.out","w",stdout);
-    //freopen("/mnt/c/Users/hejia/Desktop/Basic-Interpreter-2024/Test/trace70.txt","r",stdin);
+    freopen("/mnt/c/Users/hejia/Desktop/Basic-Interpreter-2024/Test/trace63.txt","r",stdin);
     EvalState state;   // 存变量 和 值
     Program program;   // 存代码
     //cout << "Stub implementation of BASIC" << endl;
@@ -84,11 +84,9 @@ void processLine(std::string line, Program &program, EvalState &state) {
         if (read == "RUN") {
             output = new RunStatement;
             output->execute(state, program);
-            delete output;
         } else if (read == "LIST") {   //
             output = new ListStatement;
-            output->execute(state, program);
-            delete output;
+            output->execute(state, program);\
         } else if (read == "CLEAR") {   //
             program.clear();
             state.Clear();
@@ -98,12 +96,10 @@ void processLine(std::string line, Program &program, EvalState &state) {
             std::cout << "There is nothing actually.\n";
         } else if (read == "INPUT") {
             output = new InputStatement(line);
-            output->execute(state,program);
-            delete output;
+            output->execute(state,program);\
         } else if (read == "LET") {   //
             output = new LetStatement(line);
-            output->execute(state, program);
-            delete output;/*
+            output->execute(state, program);/*
             std::string name = scanner.nextToken();
             if (scanner.nextToken() != "=") {
                 error("SYNTAX ERROR");
@@ -113,7 +109,6 @@ void processLine(std::string line, Program &program, EvalState &state) {
         } else if (read == "PRINT") {   //
             output = new PrintStatement(parseExp(scanner));
             output->execute(state, program);
-            delete output;
             //Expression *parse = parseExp(scanner);
             //std::cout << parse->eval(state) << std::endl;
         } else {
