@@ -24,7 +24,7 @@ void processLine(std::string line, Program &program, EvalState &state);
 int main() {
     //freopen("D:\\c++code\\code\\bigger.in","r",stdin);
     //freopen("D:\\c++code\\code\\out.out","w",stdout);
-    freopen("/mnt/c/Users/hejia/Desktop/Basic-Interpreter-2024/Test/trace04.txt","r",stdin);
+    //freopen("/mnt/c/Users/hejia/Desktop/Basic-Interpreter-2024/Test/trace04.txt","r",stdin);
     EvalState state;   // 存变量 和 值
     Program program;   // 存代码
     //cout << "Stub implementation of BASIC" << endl;
@@ -74,7 +74,7 @@ void processLine(std::string line, Program &program, EvalState &state) {
             } else if (read == "REM") {
             } else if (read == "IF") {
             } else {
-                std::cout << "SYNTAX ERROR\n";
+                error("SYNTAX ERROR");
             }
         } else {
             program.removeSourceLine(linenumber);
@@ -121,7 +121,7 @@ void processLine(std::string line, Program &program, EvalState &state) {
             //Expression *parse = parseExp(scanner);
             //std::cout << parse->eval(state) << std::endl;
         } else {
-            std::cout << "SYNTAX ERROR\n";
+            error("SYNTAX ERROR");
         }
     }
 }

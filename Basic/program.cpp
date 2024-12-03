@@ -26,6 +26,10 @@ void Program::clear() {
 void Program::addSourceLine(int lineNumber, const std::string &line) {
     // Replace this stub with your own code
     //todo
+    auto it = linecode.find(lineNumber);
+    if (it != linecode.end()) {
+        linecode.erase(it);
+    }
     number.insert(lineNumber);
     linecode[lineNumber] = line;
 }
