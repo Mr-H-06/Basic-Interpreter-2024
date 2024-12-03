@@ -24,7 +24,7 @@ void processLine(std::string line, Program &program, EvalState &state);
 int main() {
     //freopen("D:\\c++code\\code\\bigger.in","r",stdin);
     //freopen("D:\\c++code\\code\\out.out","w",stdout);
-    //freopen("/mnt/c/Users/hejia/Desktop/Basic-Interpreter-2024/Test/trace04.txt","r",stdin);
+    freopen("/mnt/c/Users/hejia/Desktop/Basic-Interpreter-2024/Test/trace70.txt","r",stdin);
     EvalState state;   // 存变量 和 值
     Program program;   // 存代码
     //cout << "Stub implementation of BASIC" << endl;
@@ -82,13 +82,9 @@ void processLine(std::string line, Program &program, EvalState &state) {
     } else {
         Statement *output;
         if (read == "RUN") {
-            int ins = program.getFirstLineNumber();
-            while (ins != -1) {
-                TokenScanner code;
-                code.ignoreWhitespace();
-                code.scanNumbers();
-                code.setInput(program.getline(ins));
-            }
+            output = new RunStatement;
+            output->execute(state, program);
+            delete output;
         } else if (read == "LIST") {   //
             output = new ListStatement;
             output->execute(state, program);

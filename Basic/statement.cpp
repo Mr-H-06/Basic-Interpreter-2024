@@ -88,6 +88,7 @@ void LetStatement::execute(EvalState &state, Program &program) {
     scan.nextToken();
     std::string name = scan.nextToken();
     if (scan.nextToken() != "=" || !check(name)) {
+        delete this;
         error("SYNTAX ERROR");
     } else {
         state.setValue(name, parseExp(scan)->eval(state));
@@ -107,9 +108,7 @@ void RunStatement::execute(EvalState &state, Program &program) {
             ++k;
         }
         ++k;
-        for (int i = k; i < read.size(); ++i) {
-            line[i - k] = read[i];
-        }
+        line = read.substr(k);
         TokenScanner code;
         code.ignoreWhitespace();
         code.scanNumbers();
@@ -117,7 +116,6 @@ void RunStatement::execute(EvalState &state, Program &program) {
         read = code.nextToken();
         Statement *output;
         if (read == "GOTO") {   //
-            delete output;
             int lineNumber = stringToInteger(code.nextToken());
             if (program.checkline(lineNumber)) {
                 ins = lineNumber;
@@ -152,13 +150,10 @@ void RunStatement::execute(EvalState &state, Program &program) {
             //Expression *parse = parseExp(scanner);
             //std::cout << parse->eval(state) << std::endl;
         } else if (read == "REM") {
-            delete output;
             ins = program.getNextLineNumber(ins);
         } else if (read == "END") {
-            delete output;
             break;
         } else {
-            delete output;
             error("SYNTAX ERROR");
         }
     }
