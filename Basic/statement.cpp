@@ -88,7 +88,7 @@ void LetStatement::execute(EvalState &state, Program &program) {
     scan.nextToken();
     std::string name = scan.nextToken();
     if (scan.nextToken() != "=" || !check(name)) {
-        error("SYNTAX ERROR");
+        std::cout << "SYNTAX ERROR\n";
     } else {
         state.setValue(name, parseExp(scan)->eval(state));
     }

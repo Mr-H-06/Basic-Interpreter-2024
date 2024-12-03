@@ -142,9 +142,9 @@ public:
 
     //more func to add
     //todo
-  std::string getline(int lineNumber);
+    std::string getline(int lineNumber);
 
-  bool checkline(int lineNumber);
+    bool checkline(int lineNumber);
 
 private:
 
